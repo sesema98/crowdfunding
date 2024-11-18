@@ -105,7 +105,7 @@
       <!-- Primera imagen -->
       <div class="carousel-item active">
         <img src="https://cdn01.pucp.education/idehpucp/images/2024/03/actualidad_2-081117-113212-1-scaled-1024x501.jpg" class="d-block w-100" alt="Primera imagen">
-        <div class="carousel-caption d-none d-md-block">
+        <div class="carousel-caption">
           <h5>Apoyo comunitario</h5>
           <p>Descubre cómo tus donaciones pueden transformar vidas en comunidades vulnerables.</p>
         </div>
@@ -113,7 +113,7 @@
       <!-- Segunda imagen -->
       <div class="carousel-item">
         <img src="https://elperuano.pe/fotografia/thumbnail/2019/07/31/000062491M.jpg" class="d-block w-100" alt="Segunda imagen">
-        <div class="carousel-caption d-none d-md-block">
+        <div class="carousel-caption">
           <h5>Educación para todos</h5>
           <p>Contribuye a campañas educativas que brindan oportunidades a jóvenes talentosos.</p>
         </div>
@@ -121,7 +121,7 @@
       <!-- Tercera imagen -->
       <div class="carousel-item">
         <img src="https://larepublica.cronosmedia.glr.pe/data/2121/03/30/memoria-con-cintillo.png" class="d-block w-100" alt="Tercera imagen">
-        <div class="carousel-caption d-none d-md-block">
+        <div class="carousel-caption">
           <h5>Emergencias médicas</h5>
           <p>Tu ayuda puede marcar la diferencia en tratamientos y urgencias médicas.</p>
         </div>
@@ -136,6 +136,7 @@
       <span class="visually-hidden">Siguiente</span>
     </button>
   </div>
+  
   
   
 
@@ -262,16 +263,30 @@
     color: #ffdd57; /* Cambia este valor para el color de hover */
   }
   .carousel-caption {
-    background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro semitransparente */
-    padding: 15px;
+    background-color: rgba(0, 0, 0, 0.6); /* Fondo oscuro semitransparente */
+    color: #ffffff; /* Texto en blanco */
+    padding: 10px;
     border-radius: 5px;
+    bottom: 20px; /* Ajuste para móviles */
   }
   .carousel-caption h5 {
-    font-size: 1.8rem;
+    font-size: 1.5rem; /* Tamaño de título ajustado */
     font-weight: bold;
   }
   .carousel-caption p {
-    font-size: 1.2rem;
+    font-size: 1rem; /* Tamaño de párrafo ajustado */
+  }
+  @media (max-width: 768px) {
+    .carousel-caption {
+      bottom: 10px; /* Más cerca del borde para móviles */
+      font-size: 0.9rem; /* Texto más pequeño */
+    }
+    .carousel-caption h5 {
+      font-size: 1.2rem; /* Título más pequeño */
+    }
+    .carousel-caption p {
+      font-size: 0.8rem; /* Párrafo más pequeño */
+    }
   }
 </style>
 </body>
