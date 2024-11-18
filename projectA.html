@@ -28,6 +28,9 @@
     .navbar .nav-link:hover {
       color: #ffc107 !important;
     }
+    .text-success {
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -59,6 +62,19 @@
     </div>
     <p class="text-center">Recaudado: <span id="raisedAmount">$50,000</span> de $100,000</p>
 
+    <!-- Sección de incentivos y recompensas -->
+    <div class="content-box">
+      <h2 class="text-center">Incentivos y Recompensas</h2>
+      <p>¡Contribuir tiene sus beneficios! Aquí están algunas recompensas que recibirás según tu nivel de donación:</p>
+      <ul>
+        <li><strong>$10 o más:</strong> Agradecimiento público en nuestras redes sociales.</li>
+        <li><strong>$50 o más:</strong> Certificado digital de contribución.</li>
+        <li><strong>$100 o más:</strong> Mención especial en la página del proyecto.</li>
+        <li><strong>$500 o más:</strong> Producto exclusivo relacionado con el proyecto (entrega física o digital).</li>
+      </ul>
+      <p class="text-muted">Las recompensas pueden variar según la disponibilidad. Para preguntas sobre las recompensas, contáctanos al correo del creador.</p>
+    </div>
+
     <!-- Formulario combinado -->
     <form id="donationCommentForm">
       <div class="mb-3">
@@ -73,6 +89,7 @@
         <label for="commentText" class="form-label">Comentario</label>
         <textarea class="form-control" id="commentText" rows="2" placeholder="Escribe tu comentario..."></textarea>
       </div>
+      <p id="rewardMessage" class="text-success"></p>
       <button type="button" class="btn btn-primary w-100" onclick="showPaymentModal()">Donar y comentar</button>
     </form>
   </div>
@@ -116,8 +133,24 @@
   <!-- Bootstrap 5 JS y Popper.js -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
-  <!-- Script para donaciones y comentarios -->
+  <!-- Script para donaciones, comentarios y recompensas dinámicas -->
   <script>
+    document.getElementById('donationAmount').addEventListener('input', function () {
+      const amount = parseInt(this.value);
+      const rewardMessage = document.getElementById('rewardMessage');
+      if (amount >= 500) {
+        rewardMessage.textContent = "Recibirás un producto exclusivo relacionado con el proyecto.";
+      } else if (amount >= 100) {
+        rewardMessage.textContent = "Recibirás una mención especial en la página del proyecto.";
+      } else if (amount >= 50) {
+        rewardMessage.textContent = "Recibirás un certificado digital de contribución.";
+      } else if (amount >= 10) {
+        rewardMessage.textContent = "Recibirás un agradecimiento público en nuestras redes sociales.";
+      } else {
+        rewardMessage.textContent = "";
+      }
+    });
+
     function showPaymentModal() {
       const email = document.getElementById('email').value;
       const donationAmount = document.getElementById('donationAmount').value;
@@ -137,10 +170,7 @@
       const commentText = document.getElementById('commentText').value;
 
       if (email && donationAmount > 0) {
-        // Simula el procesamiento de pago
         alert("Donación procesada exitosamente. ¡Gracias por tu apoyo!");
-
-        // Actualizar barra de progreso
         const progressBar = document.getElementById('progressBarA');
         const raisedAmount = document.getElementById('raisedAmount');
         let currentAmount = parseInt(raisedAmount.textContent.replace('$', '').replace(',', ''));
@@ -149,13 +179,11 @@
         const progressPercent = (currentAmount / 100000) * 100;
         progressBar.style.width = `${progressPercent}%`;
 
-        // Agregar comentario
         const commentsDiv = document.getElementById('comments');
         const commentEntry = document.createElement('p');
         commentEntry.textContent = `Comentario: ${commentText}`;
         commentsDiv.appendChild(commentEntry);
 
-        // Resetear formulario
         document.getElementById('donationCommentForm').reset();
         const paymentModal = bootstrap.Modal.getInstance(document.getElementById('paymentModal'));
         paymentModal.hide();
