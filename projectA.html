@@ -59,8 +59,8 @@
     </div>
     <p class="text-center">Recaudado: <span id="raisedAmount">$50,000</span> de $100,000</p>
 
-    <!-- Formulario para donaciones -->
-    <form id="donationForm">
+    <!-- Formulario combinado -->
+    <form id="donationCommentForm">
       <div class="mb-3">
         <label for="email" class="form-label">Correo electrónico</label>
         <input type="email" class="form-control" id="email" placeholder="nombre@ejemplo.com" required>
@@ -69,21 +69,41 @@
         <label for="donationAmount" class="form-label">Monto a donar</label>
         <input type="number" class="form-control" id="donationAmount" placeholder="Ingresa el monto a donar" required>
       </div>
-      <button type="button" class="btn btn-primary w-100" onclick="processDonation()">Donar</button>
+      <div class="mb-3">
+        <label for="commentText" class="form-label">Comentario</label>
+        <textarea class="form-control" id="commentText" rows="2" placeholder="Escribe tu comentario..."></textarea>
+      </div>
+      <button type="button" class="btn btn-primary w-100" onclick="showPaymentModal()">Donar y comentar</button>
     </form>
   </div>
 
-  <!-- Sección para comentarios -->
-  <div class="content-box">
-    <h2 class="text-center">Comentarios</h2>
-    <div id="comments">
-      <!-- Comentarios dinámicos aquí -->
+  <!-- Modal para método de pago -->
+  <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="paymentModalLabel">Método de pago</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="paymentForm">
+            <div class="mb-3">
+              <label for="cardNumber" class="form-label">Número de tarjeta</label>
+              <input type="text" class="form-control" id="cardNumber" placeholder="1234 5678 9012 3456" required>
+            </div>
+            <div class="mb-3">
+              <label for="expiryDate" class="form-label">Fecha de expiración</label>
+              <input type="text" class="form-control" id="expiryDate" placeholder="MM/AA" required>
+            </div>
+            <div class="mb-3">
+              <label for="cvv" class="form-label">CVV</label>
+              <input type="text" class="form-control" id="cvv" placeholder="123" required>
+            </div>
+            <button type="button" class="btn btn-success w-100" onclick="processDonation()">Confirmar pago</button>
+          </form>
+        </div>
+      </div>
     </div>
-    <form id="commentForm">
-      <textarea class="form-control" id="commentText" rows="2" placeholder="Escribe tu comentario..."></textarea>
-      <input type="number" id="rating" class="form-control mt-2" placeholder="Calificación (1-5)">
-      <button type="button" class="btn btn-success mt-2 w-100" onclick="addComment()">Agregar comentario</button>
-    </form>
   </div>
 
   <!-- Footer -->
@@ -98,46 +118,50 @@
 
   <!-- Script para donaciones y comentarios -->
   <script>
-    function processDonation() {
+    function showPaymentModal() {
       const email = document.getElementById('email').value;
       const donationAmount = document.getElementById('donationAmount').value;
 
-      if (email && donationAmount > 0) {
-        // Enviar los datos al backend
-        fetch('/send-confirmation', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email, donationAmount }),
-        })
-        .then(response => response.json())
-        .then(data => {
-          alert(data.message);
-          // Actualizar barra de progreso
-          const progressBar = document.getElementById('progressBarA');
-          const raisedAmount = document.getElementById('raisedAmount');
-          let currentAmount = parseInt(raisedAmount.textContent.replace('$', '').replace(',', ''));
-          currentAmount += parseInt(donationAmount);
-          raisedAmount.textContent = `$${currentAmount.toLocaleString()}`;
-          const progressPercent = (currentAmount / 100000) * 100;
-          progressBar.style.width = `${progressPercent}%`;
-        })
-        .catch(error => console.error('Error al procesar la donación:', error));
-      } else {
+      if (!email || donationAmount <= 0) {
         alert("Por favor, ingresa un correo y un monto válido.");
+        return;
       }
+
+      const paymentModal = new bootstrap.Modal(document.getElementById('paymentModal'));
+      paymentModal.show();
     }
 
-    function addComment() {
+    function processDonation() {
+      const email = document.getElementById('email').value;
+      const donationAmount = document.getElementById('donationAmount').value;
       const commentText = document.getElementById('commentText').value;
-      const rating = document.getElementById('rating').value;
-      const commentsDiv = document.getElementById('comments');
-      const commentEntry = document.createElement('p');
-      commentEntry.textContent = `Comentario: ${commentText}, Calificación: ${rating}/5`;
-      commentsDiv.appendChild(commentEntry);
-      document.getElementById('commentText').value = '';
-      document.getElementById('rating').value = '';
+
+      if (email && donationAmount > 0) {
+        // Simula el procesamiento de pago
+        alert("Donación procesada exitosamente. ¡Gracias por tu apoyo!");
+
+        // Actualizar barra de progreso
+        const progressBar = document.getElementById('progressBarA');
+        const raisedAmount = document.getElementById('raisedAmount');
+        let currentAmount = parseInt(raisedAmount.textContent.replace('$', '').replace(',', ''));
+        currentAmount += parseInt(donationAmount);
+        raisedAmount.textContent = `$${currentAmount.toLocaleString()}`;
+        const progressPercent = (currentAmount / 100000) * 100;
+        progressBar.style.width = `${progressPercent}%`;
+
+        // Agregar comentario
+        const commentsDiv = document.getElementById('comments');
+        const commentEntry = document.createElement('p');
+        commentEntry.textContent = `Comentario: ${commentText}`;
+        commentsDiv.appendChild(commentEntry);
+
+        // Resetear formulario
+        document.getElementById('donationCommentForm').reset();
+        const paymentModal = bootstrap.Modal.getInstance(document.getElementById('paymentModal'));
+        paymentModal.hide();
+      } else {
+        alert("Por favor, completa todos los campos.");
+      }
     }
   </script>
 </body>
